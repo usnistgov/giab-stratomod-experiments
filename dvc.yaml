@@ -1,15 +1,12 @@
-vars:
-  - config/dvc-params.yml
-
 stages:
   snakemake:
-    cmd: snakemake --configfile=config/${config} --profile workflow/profiles/${profile}
+    cmd: snakemake --configfile=config/config.yml --profile workflow/profiles/nisaba
     deps:
-    - config/${config}
+    - config/config.yml
     outs:
-    - results/annotated_input:
+    - results/annotated_variants:
         persist: true
     - results/log:
         persist: true
-    - results/ebm:
+    - results/model:
         persist: true
