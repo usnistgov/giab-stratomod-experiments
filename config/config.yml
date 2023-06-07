@@ -90,7 +90,10 @@ models:
         visualization:
           truncate: {lower: 0, upper: 50}
       TR_identity_min: {}
-      TR_score_max: {}
+      TR_length:
+        transform: log
+        visualization:
+          split_missing: 0
       TR_percent_AT_median:
         fill_na: -1
         visualization:
