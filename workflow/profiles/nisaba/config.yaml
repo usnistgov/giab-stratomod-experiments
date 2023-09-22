@@ -15,6 +15,8 @@ default-resources:
   - time="8:0:0"
 set-resources:
   - label_vcf:mem_mb=32000
+  - sort_and_filter_simple_repeats:mem_mb=16000
+  - get_homopolymers:mem_mb=16000
 set-threads:
   - train_ebm=4
 restart-times: 0
