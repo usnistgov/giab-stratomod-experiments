@@ -2,3 +2,5 @@
 data
 results
 resources
+cluster_logs
+*.swp
