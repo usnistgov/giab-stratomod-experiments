@@ -11,7 +11,7 @@ labeled_queries:
     chr_prefix: chr
     corrections:
       fix_refcall_gt: true
-    benchmark: HG002_asm_v27_auto
+    benchmark: HG002_asm_q100_auto
     refset: GRCh38_auto
     src:
       url: https://storage.googleapis.com/brain-genomics-public/research/element/candidates/HG002.element.grch38.30x.vcf.gz
@@ -20,7 +20,7 @@ labeled_queries:
       seqtech: Element
 
   HG002_Element_50_auto: &ele_50_auto
-    <: *ele_30_auto
+    <<: *ele_30_auto
     src:
       url: https://storage.googleapis.com/brain-genomics/awcarroll/share/giab/element/HG002.element_dfrac_0.616.grch38.vcf.gz
     variables:
@@ -28,7 +28,7 @@ labeled_queries:
       seqtech: Element
 
   HG002_Illumina_30_auto: &ilu_30_auto
-    <: *ele_30_auto
+    <<: *ele_30_auto
     src:
       url: https://storage.googleapis.com/brain-genomics-public/research/element/candidates/HG002.novaseq.pcr-free.30x.vcf.gz
     variables:
@@ -36,7 +36,7 @@ labeled_queries:
       seqtech: Illumina-PCR-Free
 
   HG002_Illumina_40_auto: &ilu_40_auto
-    <: *ele_30_auto
+    <<: *ele_30_auto
     src:
       url: https://storage.googleapis.com/brain-genomics-public/research/sequencing/grch38/vcf/hiseqx/wgs_pcr_free/40x/HG002.hiseqx.pcr-free.40x.deepvariant-v1.0.grch38.vcf.gz
     variables:
@@ -44,15 +44,15 @@ labeled_queries:
       seqtech: Illumina-PCR-Free
 
   HG002_Illumina_50_auto: &ilu_50_auto
-    <: *ele_30_auto
+    <<: *ele_30_auto
     src:
       url: https://storage.googleapis.com/brain-genomics/awcarroll/share/giab/element/HG002.novaseq.pcr-free.50x.dedup.grch38.vcf.gz
     variables:
       coverage: 50
-      seqtech: Illumina PCR-Free
+      seqtech: Illumina-PCR-Free
 
   HG002_Ultima_auto: &ult_40_auto
-    <: *ele_30_auto
+    <<: *ele_30_auto
     src:
       url: https://s3.amazonaws.com/ultima-selected-1k-genomes-vcf-only/DeepVariant_vcfs/HG002_005401-UGAv3-1-CACATCCTGCATGTGAT.vcf.gz
     variables:
@@ -60,39 +60,39 @@ labeled_queries:
       seqtech: Ultima
 
   HG002_Element_30_xy:
-    <: *ele_30_auto
+    <<: *ele_30_auto
     benchmark: HG002_asm_v27_xy
     refset: GRCh38_xy
 
   HG002_Element_50_xy:
-    <: *ele_50_auto
+    <<: *ele_50_auto
     benchmark: HG002_asm_v27_xy
     refset: GRCh38_xy
 
   HG002_Illumina_30_xy:
-    <: *ilu_30_auto
+    <<: *ilu_30_auto
     benchmark: HG002_asm_v27_xy
     refset: GRCh38_xy
 
   HG002_Illumina_40_xy:
-    <: *ilu_40_auto
+    <<: *ilu_40_auto
     benchmark: HG002_asm_v27_xy
     refset: GRCh38_xy
 
   HG002_Illumina_50_xy:
-    <: *ilu_50_auto
+    <<: *ilu_50_auto
     benchmark: HG002_asm_v27_xy
     refset: GRCh38_xy
 
   HG002_Ultima_xy:
-    <: *ult_40_auto
+    <<: *ult_40_auto
     benchmark: HG002_asm_v27_xy
     refset: GRCh38_xy
 
   # HG4 for FP models
   
   HG004_Illumina_40_auto: &ilu_40_auto4
-    <: *ele_30_auto
+    <<: *ele_30_auto
     src:
       url: https://storage.googleapis.com/brain-genomics-public/research/sequencing/grch38/vcf/hiseqx/wgs_pcr_free/40x/HG004.hiseqx.pcr-free.40x.deepvariant-v1.0.grch38.vcf.gz
     variables:
@@ -100,7 +100,7 @@ labeled_queries:
       seqtech: Illumina-PCR-Free
 
   HG004_IlluminaPCR_40_auto: &iluPCR_40_auto4
-    <: *ele_30_auto
+    <<: *ele_30_auto
     src:
       url: https://storage.googleapis.com/brain-genomics-public/research/sequencing/grch38/vcf/hiseqx/wgs_pcr_plus/40x/HG004.hiseqx.pcr-plus.40x.deepvariant-v1.0.grch38.vcf.gz
     variables:
@@ -108,12 +108,12 @@ labeled_queries:
       seqtech: Illumina-PCR-Plus
 
   HG004_Illumina_40_xy:
-    <: *ilu_40_auto4
+    <<: *ilu_40_auto4
     benchmark: HG002_asm_v27_xy
     refset: GRCh38_xy
 
   HG004_IlluminaPCR_40_xy:
-    <: *iluPCR_40_auto4
+    <<: *iluPCR_40_auto4
     benchmark: HG002_asm_v27_xy
     refset: GRCh38_xy
 
@@ -123,7 +123,7 @@ models:
   auto_ult_v_ilu_fn:
     train:
       - HG002_Illumina_40_auto
-      - HG002_Ultima_40_auto
+      - HG002_Ultima_auto
 
     vartypes: [SNV, INDEL]
     error_labels: [fn]
@@ -207,7 +207,7 @@ models:
     interactions: 20
 
     features: &feature_base_w_coverage
-      <: *feature_base
+      <<: *feature_base
       VAR_coverage: {}
 
   auto_ilu_full_fn:
@@ -222,12 +222,12 @@ models:
     interactions: 20
 
     features:
-      <: *feature_base_w_coverage
+      <<: *feature_base_w_coverage
 
   xy_ult_v_ilu_fn:
     train:
-      - HG002_Ultima_40_xy
       - HG002_Illumina_40_xy
+      - HG002_Ultima_xy
 
     vartypes: [SNV, INDEL]
     error_labels: [fn]
@@ -235,7 +235,7 @@ models:
     interactions: 20
 
     features:
-      <: *feature_base
+      <<: *feature_base
 
   xy_ele_v_ilu_fn:
     train:
@@ -250,7 +250,7 @@ models:
     interactions: 20
 
     features:
-      <: *feature_base_w_coverage
+      <<: *feature_base_w_coverage
 
   xy_ilu_full_fn:
     train:
@@ -264,7 +264,7 @@ models:
     interactions: 20
 
     features:
-      <: *feature_base_w_coverage
+      <<: *feature_base_w_coverage
 
   # FP models
 
@@ -279,7 +279,7 @@ models:
     interactions: 20
 
     features:
-      <: *feature_base
+      <<: *feature_base
 
   xy_ilu_fp:
     train:
@@ -292,7 +292,7 @@ models:
     interactions: 20
 
     features:
-      <: *feature_base
+      <<: *feature_base
 
 references:
   GRCh38:
@@ -337,21 +337,21 @@ references:
         vcf:
           src: 
             filepath: data/benchmarks/GRCh38_HG2-T2TQ100-V0.9_dipcall-z2k.vcf.gz
-            md5: 1a6a1c72e98559b658757c63d43d3355
+            md5: 054de8d804f2eb42ff17ff21d3694c16
         bed:
           src: 
             filepath: data/benchmarks/GRCh38_HG2-T2TQ100-V0.9_dipcall-z2k.benchmark.bed
-            md5: 899ab59823159dd6d431579cabf43c34
+            md5: 860c9d7abb8f3563143ccc32ee8f67a1
       # from here: https://drive.google.com/drive/u/1/folders/1iNuMIwNlW4pex5bn5OllaURZBxI3FNsB
       HG002_asm_v27_xy:
         vcf:
           src: 
             filepath: data/benchmarks/GRCh38_T2T-XY-v2.7_dipcall-z2k.vcf.gz
-            md5: 1a6a1c72e98559b658757c63d43d3355
+            md5: 4f8973a241aa5b2a2bce36ca9087eebb
         bed:
           src: 
-            filepath: data/benchmarks/GRCh38_T2T-XY-v2.7_dipcall-z2k.excluded.bed.gz
-            md5: 899ab59823159dd6d431579cabf43c34
+            filepath: data/benchmarks/GRCh38_T2T-XY-v2.7_dipcall-z2k.benchmark.bed
+            md5: 8c6ed334e9ae4ad42a234335ed726f65
 
 feature_definitions:
   variables:
@@ -361,9 +361,8 @@ feature_definitions:
     categorical:
       seqtech:
         levels:
-          - "PacBio HiFi"
-          - "Illumina PCR-Free"
-          - "Illumina PCR-Plus"
+          - "Illumina-PCR-Free"
+          - "Illumina-PCR-Plus"
           - "Element"
           - "Ultima"
         description: Sequencing tech used to produce the reads for the VCF file
