@@ -302,12 +302,12 @@ models:
   auto_ult_v_ilu_seqtech:
     <<: *auto_ult_v_ilu
     interactions:
-      - VAR_seqteq
+      - VAR_seqtech
 
   auto_ele_v_ilu_seqtech:
     <<: *auto_ele_v_ilu
     interactions:
-      - VAR_seqteq
+      - VAR_seqtech
 
 references:
   GRCh38:
