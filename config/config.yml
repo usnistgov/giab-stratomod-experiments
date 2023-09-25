@@ -135,9 +135,12 @@ models:
 
       VAR_seqtech:
         feature_type: categorical
+        visualization:
+          plot_type: bar
 
       VCF_indel_length:
         visualization:
+          plot_type: bar
           truncate: {lower: -50, upper: 50}
 
       HOMOPOL_A_length: &homopol_length
@@ -340,8 +343,8 @@ references:
             md5: 054de8d804f2eb42ff17ff21d3694c16
         bed:
           src: 
-            filepath: data/benchmarks/GRCh38_HG2-T2TQ100-V0.9_dipcall-z2k.benchmark.bed
-            md5: 860c9d7abb8f3563143ccc32ee8f67a1
+            filepath: data/benchmarks/GRCh38_HG2-T2TQ100-V0.9_dipcall-z2k.benchmark.bed.gz
+            md5: 972bd257859de5c58773567087c22411
       # from here: https://drive.google.com/drive/u/1/folders/1iNuMIwNlW4pex5bn5OllaURZBxI3FNsB
       HG002_asm_v27_xy:
         vcf:
@@ -350,8 +353,8 @@ references:
             md5: 4f8973a241aa5b2a2bce36ca9087eebb
         bed:
           src: 
-            filepath: data/benchmarks/GRCh38_T2T-XY-v2.7_dipcall-z2k.benchmark.bed
-            md5: 8c6ed334e9ae4ad42a234335ed726f65
+            filepath: data/benchmarks/GRCh38_T2T-XY-v2.7_dipcall-z2k.benchmark.bed.gz
+            md5: f1c9139c372ab8ea17509f22451dca9b
 
 feature_definitions:
   variables:
