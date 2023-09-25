@@ -120,7 +120,7 @@ labeled_queries:
 unlabeled_queries: {}
 
 models:
-  auto_ult_v_ilu_fn:
+  auto_ult_v_ilu_fn: &auto_ult_v_ilu
     train:
       - HG002_Illumina_40_auto
       - HG002_Ultima_auto
@@ -197,7 +197,7 @@ models:
           plot_type: bar
           truncate: {upper: 50}
 
-  auto_ele_v_ilu_fn:
+  auto_ele_v_ilu_fn: &auto_ele_v_ilu
     train:
       - HG002_Element_30_auto
       - HG002_Element_50_auto
@@ -296,6 +296,18 @@ models:
 
     features:
       <<: *feature_base
+
+  # seqtech only interaction models
+
+  auto_ult_v_ilu_seqtech:
+    <<: *auto_ult_v_ilu
+    interactions:
+      - VAR_seqteq
+
+  auto_ele_v_ilu_seqtech:
+    <<: *auto_ele_v_ilu
+    interactions:
+      - VAR_seqteq
 
 references:
   GRCh38:
