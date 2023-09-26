@@ -213,6 +213,19 @@ models:
       <<: *feature_base
       VAR_coverage: {}
 
+  auto_ele_v_ilu_30_fn: &auto_ele_v_ilu_30
+    train:
+      - HG002_Element_30_auto
+      - HG002_Illumina_30_auto
+
+    vartypes: [SNV, INDEL]
+    error_labels: [fn]
+    filtered_are_candidates: false
+    interactions: 20
+
+    features:
+      <<: *feature_base
+
   auto_ilu_full_fn:
     train:
       - HG002_Illumina_30_auto
@@ -306,6 +319,11 @@ models:
 
   auto_ele_v_ilu_seqtech:
     <<: *auto_ele_v_ilu
+    interactions:
+      - VAR_seqtech
+      
+  auto_ele_v_ilu_30_seqtech_fn:
+    <<: *auto_ele_v_ilu_30
     interactions:
       - VAR_seqtech
 
