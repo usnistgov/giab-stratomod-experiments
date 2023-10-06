@@ -11,14 +11,14 @@ cluster:
     --time={resources.time}
 default-resources:
   - partition=batch
-  - mem_mb=1000
+  - mem_mb=4000
   - time="8:0:0"
 set-resources:
-  - gem_index:mem_mb=32000
-  - gem_mappability:mem_mb=32000
-  - gem_to_wig:mem_mb=32000
+  - label_vcf:mem_mb=32000
+  - sort_and_filter_simple_repeats:mem_mb=16000
+  - get_homopolymers:mem_mb=16000
 set-threads:
-  - gem_mappability=32
+  - train_ebm=4
 restart-times: 0
 max-jobs-per-second: 10
 max-status-checks-per-second: 1

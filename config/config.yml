@@ -1,0 +1,401 @@
+reference_sets:
+  GRCh38_auto:
+    ref: GRCh38
+    chr_filter: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
+  GRCh38_xy:
+    ref: GRCh38
+    chr_filter: [23, 24]
+
+labeled_queries:
+  HG002_Element_30_auto: &ele_30_auto
+    chr_prefix: chr
+    corrections:
+      fix_refcall_gt: true
+    benchmark: HG002_asm_q100_auto
+    refset: GRCh38_auto
+    src:
+      url: https://storage.googleapis.com/brain-genomics-public/research/element/candidates/HG002.element.grch38.30x.vcf.gz
+    variables:
+      coverage: 30
+      seqtech: Element
+
+  HG002_Element_50_auto: &ele_50_auto
+    <<: *ele_30_auto
+    src:
+      url: https://storage.googleapis.com/brain-genomics/awcarroll/share/giab/element/HG002.element_dfrac_0.616.grch38.vcf.gz
+    variables:
+      coverage: 50
+      seqtech: Element
+
+  HG002_Illumina_30_auto: &ilu_30_auto
+    <<: *ele_30_auto
+    src:
+      url: https://storage.googleapis.com/brain-genomics-public/research/element/candidates/HG002.novaseq.pcr-free.30x.vcf.gz
+    variables:
+      coverage: 30
+      seqtech: Illumina-PCR-Free
+
+  HG002_Illumina_40_auto: &ilu_40_auto
+    <<: *ele_30_auto
+    src:
+      url: https://storage.googleapis.com/brain-genomics-public/research/sequencing/grch38/vcf/hiseqx/wgs_pcr_free/40x/HG002.hiseqx.pcr-free.40x.deepvariant-v1.0.grch38.vcf.gz
+    variables:
+      coverage: 40
+      seqtech: Illumina-PCR-Free
+
+  HG002_Illumina_50_auto: &ilu_50_auto
+    <<: *ele_30_auto
+    src:
+      url: https://storage.googleapis.com/brain-genomics/awcarroll/share/giab/element/HG002.novaseq.pcr-free.50x.dedup.grch38.vcf.gz
+    variables:
+      coverage: 50
+      seqtech: Illumina-PCR-Free
+
+  HG002_Ultima_auto: &ult_40_auto
+    <<: *ele_30_auto
+    src:
+      url: https://s3.amazonaws.com/ultima-selected-1k-genomes-vcf-only/DeepVariant_vcfs/HG002_005401-UGAv3-1-CACATCCTGCATGTGAT.vcf.gz
+    variables:
+      coverage: 40
+      seqtech: Ultima
+
+  HG002_Element_30_xy:
+    <<: *ele_30_auto
+    benchmark: HG002_asm_v27_xy
+    refset: GRCh38_xy
+
+  HG002_Element_50_xy:
+    <<: *ele_50_auto
+    benchmark: HG002_asm_v27_xy
+    refset: GRCh38_xy
+
+  HG002_Illumina_30_xy:
+    <<: *ilu_30_auto
+    benchmark: HG002_asm_v27_xy
+    refset: GRCh38_xy
+
+  HG002_Illumina_40_xy:
+    <<: *ilu_40_auto
+    benchmark: HG002_asm_v27_xy
+    refset: GRCh38_xy
+
+  HG002_Illumina_50_xy:
+    <<: *ilu_50_auto
+    benchmark: HG002_asm_v27_xy
+    refset: GRCh38_xy
+
+  HG002_Ultima_xy:
+    <<: *ult_40_auto
+    benchmark: HG002_asm_v27_xy
+    refset: GRCh38_xy
+
+  # HG4 for FP models
+  
+  HG004_Illumina_40_auto: &ilu_40_auto4
+    <<: *ele_30_auto
+    src:
+      url: https://storage.googleapis.com/brain-genomics-public/research/sequencing/grch38/vcf/hiseqx/wgs_pcr_free/40x/HG004.hiseqx.pcr-free.40x.deepvariant-v1.0.grch38.vcf.gz
+    variables:
+      coverage: 40
+      seqtech: Illumina-PCR-Free
+
+  HG004_IlluminaPCR_40_auto: &iluPCR_40_auto4
+    <<: *ele_30_auto
+    src:
+      url: https://storage.googleapis.com/brain-genomics-public/research/sequencing/grch38/vcf/hiseqx/wgs_pcr_plus/40x/HG004.hiseqx.pcr-plus.40x.deepvariant-v1.0.grch38.vcf.gz
+    variables:
+      coverage: 40
+      seqtech: Illumina-PCR-Plus
+
+  HG004_Illumina_40_xy:
+    <<: *ilu_40_auto4
+    benchmark: HG002_asm_v27_xy
+    refset: GRCh38_xy
+
+  HG004_IlluminaPCR_40_xy:
+    <<: *iluPCR_40_auto4
+    benchmark: HG002_asm_v27_xy
+    refset: GRCh38_xy
+
+unlabeled_queries: {}
+
+models:
+  auto_ult_v_ilu_fn: &auto_ult_v_ilu
+    train:
+      - HG002_Illumina_40_auto
+      - HG002_Ultima_auto
+
+    vartypes: [SNV, INDEL]
+    error_labels: [fn]
+    filtered_are_candidates: false
+
+    interactions: 20
+
+    features: &feature_base
+
+      VAR_seqtech:
+        feature_type: categorical
+        visualization:
+          plot_type: bar
+
+      VCF_indel_length:
+        visualization:
+          plot_type: bar
+          truncate: {lower: -50, upper: 50}
+
+      HOMOPOL_A_length: &homopol_length
+        visualization:
+          plot_type: bar
+          truncate: {lower: 0, upper: 50}
+      HOMOPOL_T_length: *homopol_length
+      HOMOPOL_G_length: *homopol_length
+      HOMOPOL_C_length: *homopol_length
+      HOMOPOL_A_imperfect_frac: &homopol_frac
+        fill_na: -1
+        visualization:
+          split_missing: 0
+      HOMOPOL_T_imperfect_frac: *homopol_frac
+      HOMOPOL_G_imperfect_frac: *homopol_frac
+      HOMOPOL_C_imperfect_frac: *homopol_frac
+
+      TR_unit_size_max:
+        visualization:
+          plot_type: bar
+          truncate: {lower: 0, upper: 50}
+      TR_unit_copies_max:
+        visualization:
+          truncate: {lower: 0, upper: 50}
+      TR_identity_min: {}
+      TR_length:
+        transform: log
+        visualization:
+          split_missing: 0
+      TR_percent_AT_median:
+        fill_na: -1
+        visualization:
+          split_missing: 0
+
+      REPMASK_SINE_length:
+        transform: binary
+        alt_name: REPMASK_SINE
+        feature_type: categorical
+      REPMASK_LTR_length:
+        transform: binary
+        alt_name: REPMASK_LTR
+        feature_type: categorical
+      REPMASK_LINE_length: {}
+
+      MAP_difficult_250bp:
+        feature_type: categorical
+      MAP_difficult_100bp:
+        feature_type: categorical
+
+      SEGDUP_size_max: {}
+      SEGDUP_identity_mean: {}
+      SEGDUP_count:
+        visualization:
+          plot_type: bar
+          truncate: {upper: 50}
+
+  auto_ele_v_ilu_fn: &auto_ele_v_ilu
+    train:
+      - HG002_Element_30_auto
+      - HG002_Element_50_auto
+      - HG002_Illumina_30_auto
+      - HG002_Illumina_50_auto
+
+    vartypes: [SNV, INDEL]
+    error_labels: [fn]
+    filtered_are_candidates: false
+    interactions: 20
+
+    features: &feature_base_w_coverage
+      <<: *feature_base
+      VAR_coverage: {}
+
+  auto_ele_v_ilu_30_fn: &auto_ele_v_ilu_30
+    train:
+      - HG002_Element_30_auto
+      - HG002_Illumina_30_auto
+
+    vartypes: [SNV, INDEL]
+    error_labels: [fn]
+    filtered_are_candidates: false
+    interactions: 20
+
+    features:
+      <<: *feature_base
+
+  auto_ilu_full_fn:
+    train:
+      - HG002_Illumina_30_auto
+      - HG002_Illumina_40_auto
+      - HG002_Illumina_50_auto
+
+    vartypes: [SNV, INDEL]
+    error_labels: [fn]
+    filtered_are_candidates: false
+    interactions: 20
+
+    features:
+      <<: *feature_base_w_coverage
+
+  xy_ult_v_ilu_fn:
+    train:
+      - HG002_Illumina_40_xy
+      - HG002_Ultima_xy
+
+    vartypes: [SNV, INDEL]
+    error_labels: [fn]
+    filtered_are_candidates: false
+    interactions: 20
+
+    features:
+      <<: *feature_base
+
+  xy_ele_v_ilu_fn:
+    train:
+      - HG002_Element_30_xy
+      - HG002_Element_50_xy
+      - HG002_Illumina_30_xy
+      - HG002_Illumina_50_xy
+
+    vartypes: [SNV, INDEL]
+    error_labels: [fn]
+    filtered_are_candidates: false
+    interactions: 20
+
+    features:
+      <<: *feature_base_w_coverage
+
+  xy_ilu_full_fn:
+    train:
+      - HG002_Illumina_30_xy
+      - HG002_Illumina_40_xy
+      - HG002_Illumina_50_xy
+
+    vartypes: [SNV, INDEL]
+    error_labels: [fn]
+    filtered_are_candidates: false
+    interactions: 20
+
+    features:
+      <<: *feature_base_w_coverage
+
+  # FP models
+
+  auto_ilu_fp:
+    train:
+      - HG004_Illumina_40_auto
+      - HG004_IlluminaPCR_40_auto
+
+    vartypes: [SNV, INDEL]
+    error_labels: [fp]
+    filtered_are_candidates: true
+    interactions: 20
+
+    features:
+      <<: *feature_base
+
+  xy_ilu_fp:
+    train:
+      - HG004_Illumina_40_xy
+      - HG004_IlluminaPCR_40_xy
+
+    vartypes: [SNV, INDEL]
+    error_labels: [fp]
+    filtered_are_candidates: true
+    interactions: 20
+
+    features:
+      <<: *feature_base
+
+  # seqtech only interaction models
+
+  auto_ult_v_ilu_seqtech:
+    <<: *auto_ult_v_ilu
+    interactions:
+      - VAR_seqtech
+
+  auto_ele_v_ilu_seqtech:
+    <<: *auto_ele_v_ilu
+    interactions:
+      - VAR_seqtech
+      
+  auto_ele_v_ilu_30_seqtech_fn:
+    <<: *auto_ele_v_ilu_30
+    interactions:
+      - VAR_seqtech
+
+references:
+  GRCh38:
+    sdf:
+      src:
+        url: https://s3.amazonaws.com/rtg-datasets/references/GRCh38.sdf.zip
+      chr_prefix: chr
+      is_fasta: False
+    strats:
+      mhc: [{chrom: 6, start: 28510020, end: 33480577}]
+    feature_data:
+      mappability:
+        low:
+          src:
+            url: https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/genome-stratifications/v3.0/GRCh38/mappability/GRCh38_lowmappabilityall.bed.gz
+        high:
+          src:
+            url: https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/genome-stratifications/v3.0/GRCh38/mappability/GRCh38_nonunique_l250_m0_e0.bed.gz
+      segdups:
+        src:
+          url: https://hgdownload.cse.ucsc.edu/goldenPath/hg38/database/genomicSuperDups.txt.gz
+        params:
+          bed_cols: {chrom: 1, start: 2, end: 3}
+      tandem_repeats:
+        src:
+          url: https://hgdownload.cse.ucsc.edu/goldenPath/hg38/database/simpleRepeat.txt.gz
+        params:
+          bed_cols: {chrom: 1, start: 2, end: 3}
+      repeat_masker:
+        src:
+          url: https://hgdownload.cse.ucsc.edu/goldenPath/hg38/database/rmsk.txt.gz
+        params:
+          bed_cols: {chrom: 5, start: 6, end: 7}
+        class_families:
+          SINE: []
+          LINE: [L1, L2, CR1, RTE-BovB, Dong-R4]
+          LTR: []
+          Satellite: []
+    benchmarks:
+      # from here: https://drive.google.com/drive/u/1/folders/1FNcfcup7_vEBBmrRFN9ZPMOV540joUZm
+      HG002_asm_q100_auto:
+        vcf:
+          src: 
+            filepath: data/benchmarks/GRCh38_HG2-T2TQ100-V0.9_dipcall-z2k.vcf.gz
+            md5: 054de8d804f2eb42ff17ff21d3694c16
+        bed:
+          src: 
+            filepath: data/benchmarks/GRCh38_HG2-T2TQ100-V0.9_dipcall-z2k.benchmark.bed.gz
+            md5: 972bd257859de5c58773567087c22411
+      # from here: https://drive.google.com/drive/u/1/folders/1iNuMIwNlW4pex5bn5OllaURZBxI3FNsB
+      HG002_asm_v27_xy:
+        vcf:
+          src: 
+            filepath: data/benchmarks/GRCh38_T2T-XY-v2.7_dipcall-z2k.vcf.gz
+            md5: 4f8973a241aa5b2a2bce36ca9087eebb
+        bed:
+          src: 
+            filepath: data/benchmarks/GRCh38_T2T-XY-v2.7_dipcall-z2k.benchmark.bed.gz
+            md5: f1c9139c372ab8ea17509f22451dca9b
+
+feature_definitions:
+  variables:
+    continuous:
+      coverage:
+        lower: 1
+    categorical:
+      seqtech:
+        levels:
+          - "Illumina-PCR-Free"
+          - "Illumina-PCR-Plus"
+          - "Element"
+          - "Ultima"
+        description: Sequencing tech used to produce the reads for the VCF file
