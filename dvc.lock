@@ -4,18 +4,18 @@ stages:
     cmd: snakemake --configfile=config/config.yml --profile workflow/profiles/nisaba
     deps:
     - path: config/config.yml
-      md5: 5235f8220fbb023c5650ee4402452418
-      size: 6055
+      md5: ad956cc73bca64d04cff6b6e986a1d9d
+      size: 6295
     outs:
     - path: results/annotated_variants
       md5: 26b6817ec506ca7d3413d602aeb1755b.dir
       size: 568822880
       nfiles: 16
     - path: results/log
-      md5: fde79c42c632d7f5d383672a5c43bbfc.dir
-      size: 17306915
+      md5: f279051a8776637b85184076cb921a9c.dir
+      size: 17398443
       nfiles: 168
     - path: results/model
-      md5: c32a7de39a741667c9f19821080de911.dir
-      size: 556577768
+      md5: 14b07798f5af9fbecbcd6cc8a034e235.dir
+      size: 568136756
       nfiles: 44

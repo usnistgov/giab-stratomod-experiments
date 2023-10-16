@@ -13,21 +13,29 @@ labeled_queries:
     refset: GRCh38_auto
     src:
       url: https://storage.googleapis.com/brain-genomics/awcarroll/share/giab/element/HG002.novaseq.pcr-free.50x.dedup.grch38.vcf.gz
+    variables:
+      split: no
 
   HG002_Ilu_v41_nosplit:
     <<: *ilu
     benchmark: HG002_v41_nosplit
     split_biallelics: false
+    variables:
+      split: no
 
   HG002_Ilu_asm_split:
     <<: *ilu
     benchmark: HG002_asm_split
     split_biallelics: true
+    variables:
+      split: yes
 
   HG002_Ilu_v41_split:
     <<: *ilu
     benchmark: HG002_v41_split
     split_biallelics: true
+    variables:
+      split: yes
 
 unlabeled_queries: {}
 
@@ -44,6 +52,8 @@ models:
     interactions: 20
 
     features:
+      VAR_split:
+        feature_type: categorical
 
       VCF_indel_length:
         visualization:
@@ -192,4 +202,7 @@ references:
 feature_definitions:
   variables:
     continuous: {}
-    categorical: {}
+    categorical:
+      split:
+        levels: [yes, no]
+        description: split
