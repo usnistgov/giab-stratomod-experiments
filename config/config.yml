@@ -51,6 +51,66 @@ models:
 
     interactions: 20
 
+    virtual_features:
+      SINE:
+        description: whether or not a variant is in a SINE (of any length)
+        expression:
+          function: binary
+          arg: REPMASK_SINE_length
+
+      HP_A_SINE_length:
+        description: length of A homopolymers in SINEs
+        expression: &in_sine_expression
+          if_:
+            relation: '='
+            left: {const: {column: VIRT_SINE}}
+            right: {const: {numeric: 1}}
+          then_: {const: {column: HOMOPOL_A_length}}
+          else_: {const: {numeric: 0}}
+
+      HP_A_NONSINE_length:
+        description: length of A homopolymers not in SINEs
+        expression: &notin_sine_expression
+          <<: *in_sine_expression
+          then_: {const: {numeric: 0}}
+          else_: {const: {column: HOMOPOL_A_length}}
+
+      HP_T_SINE_length:
+        description: length of T homopolymers in SINEs
+        expression:
+          <<: *in_sine_expression
+          then_: {const: {column: HOMOPOL_T_length}}
+
+      HP_T_NONSINE_length:
+        description: length of T homopolymers not in SINEs
+        expression: 
+          <<: *notin_sine_expression
+          else_: {const: {column: HOMOPOL_T_length}}
+
+      HP_C_SINE_length:
+        description: length of C homopolymers in SINEs
+        expression:
+          <<: *in_sine_expression
+          then_: {const: {column: HOMOPOL_C_length}}
+
+      HP_C_NONSINE_length:
+        description: length of C homopolymers not in SINEs
+        expression: 
+          <<: *notin_sine_expression
+          else_: {const: {column: HOMOPOL_C_length}}
+
+      HP_G_SINE_length:
+        description: length of G homopolymers in SINEs
+        expression:
+          <<: *in_sine_expression
+          then_: {const: {column: HOMOPOL_G_length}}
+
+      HP_G_NONSINE_length:
+        description: length of G homopolymers not in SINEs
+        expression: 
+          <<: *notin_sine_expression
+          else_: {const: {column: HOMOPOL_G_length}}
+
     features:
       VAR_split:
         feature_type: categorical
@@ -60,13 +120,24 @@ models:
           plot_type: bar
           truncate: {lower: -50, upper: 50}
 
-      HOMOPOL_A_length: &homopol_length
+      # HOMOPOL_A_length: &homopol_length
+      #   visualization:
+      #     plot_type: bar
+      #     truncate: {lower: 0, upper: 50}
+      # HOMOPOL_T_length: *homopol_length
+      # HOMOPOL_G_length: *homopol_length
+      # HOMOPOL_C_length: *homopol_length
+      VIRT_HP_A_SINE_length: &homopol_length
         visualization:
           plot_type: bar
           truncate: {lower: 0, upper: 50}
-      HOMOPOL_T_length: *homopol_length
-      HOMOPOL_G_length: *homopol_length
-      HOMOPOL_C_length: *homopol_length
+      VIRT_HP_T_SINE_length: *homopol_length
+      VIRT_HP_G_SINE_length: *homopol_length
+      VIRT_HP_C_SINE_length: *homopol_length
+      VIRT_HP_A_NONSINE_length: *homopol_length
+      VIRT_HP_T_NONSINE_length: *homopol_length
+      VIRT_HP_G_NONSINE_length: *homopol_length
+      VIRT_HP_C_NONSINE_length: *homopol_length
       HOMOPOL_A_imperfect_frac: &homopol_frac
         fill_na: -1
         visualization:
