@@ -11,6 +11,7 @@ labeled_queries:
     chr_prefix: chr
     corrections:
       fix_refcall_gt: true
+    split_biallelics: true
     benchmark: HG002_asm_q100_auto
     refset: GRCh38_auto
     src:
@@ -117,13 +118,34 @@ labeled_queries:
     benchmark: HG002_asm_v27_xy
     refset: GRCh38_xy
 
-unlabeled_queries: {}
+unlabeled_queries:
+  Clinvar_auto:
+    refset: GRCh38_auto
+    src:
+      url: https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/archive_2.0/2022/clinvar_20220812.vcf.gz
+    chr_prefix: ''
+    # NOTE: Clinvar has a wonky header which will make bcftools choke. This
+    # shouldn't be necessary anyway
+    split_biallelics: false
+    # don't include any of these fields since they are not defined in clinvar
+    format_fields:
+      VAF: null
+      DP: null
+      GT: null
+      GQ: null
 
 models:
   auto_ult_v_ilu_fn: &auto_ult_v_ilu
     train:
       - HG002_Illumina_40_auto
       - HG002_Ultima_auto
+
+    test:
+      Clinvar_Illumina:
+        query_key: Clinvar_auto
+        variables:
+          coverage: 40
+          seqtech: "Illumina-PCR-Free"
 
     vartypes: [SNV, INDEL]
     error_labels: [fn]
@@ -240,75 +262,76 @@ models:
     features:
       <<: *feature_base_w_coverage
 
-  xy_ult_v_ilu_fn:
-    train:
-      - HG002_Illumina_40_xy
-      - HG002_Ultima_xy
+  # xy_ult_v_ilu_fn:
+  #   train:
+  #     - HG002_Illumina_40_xy
+  #     - HG002_Ultima_xy
 
-    vartypes: [SNV, INDEL]
-    error_labels: [fn]
-    filtered_are_candidates: false
-    interactions: 20
+  #   vartypes: [SNV, INDEL]
+  #   error_labels: [fn]
+  #   filtered_are_candidates: false
+  #   interactions: 20
 
-    features:
-      <<: *feature_base
+  #   features:
+  #     <<: *feature_base
 
-  xy_ele_v_ilu_fn:
-    train:
-      - HG002_Element_30_xy
-      - HG002_Element_50_xy
-      - HG002_Illumina_30_xy
-      - HG002_Illumina_50_xy
+  # xy_ele_v_ilu_fn:
+  #   train:
+  #     - HG002_Element_30_xy
+  #     - HG002_Element_50_xy
+  #     - HG002_Illumina_30_xy
+  #     - HG002_Illumina_50_xy
 
-    vartypes: [SNV, INDEL]
-    error_labels: [fn]
-    filtered_are_candidates: false
-    interactions: 20
+  #   vartypes: [SNV, INDEL]
+  #   error_labels: [fn]
+  #   filtered_are_candidates: false
+  #   interactions: 20
 
-    features:
-      <<: *feature_base_w_coverage
+  #   features:
+  #     <<: *feature_base_w_coverage
 
-  xy_ilu_full_fn:
-    train:
-      - HG002_Illumina_30_xy
-      - HG002_Illumina_40_xy
-      - HG002_Illumina_50_xy
+  # xy_ilu_full_fn:
+  #   train:
+  #     - HG002_Illumina_30_xy
+  #     - HG002_Illumina_40_xy
+  #     - HG002_Illumina_50_xy
 
-    vartypes: [SNV, INDEL]
-    error_labels: [fn]
-    filtered_are_candidates: false
-    interactions: 20
+  #   vartypes: [SNV, INDEL]
+  #   error_labels: [fn]
+  #   filtered_are_candidates: false
+  #   interactions: 20
 
-    features:
-      <<: *feature_base_w_coverage
+  #   features:
+  #     <<: *feature_base_w_coverage
 
   # FP models
 
-  auto_ilu_fp:
-    train:
-      - HG004_Illumina_40_auto
-      - HG004_IlluminaPCR_40_auto
+  # these are crap without DP/VAF
+  # auto_ilu_fp:
+  #   train:
+  #     - HG004_Illumina_40_auto
+  #     - HG004_IlluminaPCR_40_auto
 
-    vartypes: [SNV, INDEL]
-    error_labels: [fp]
-    filtered_are_candidates: true
-    interactions: 20
+  #   vartypes: [SNV, INDEL]
+  #   error_labels: [fp]
+  #   filtered_are_candidates: true
+  #   interactions: 20
 
-    features:
-      <<: *feature_base
+  #   features:
+  #     <<: *feature_base
 
-  xy_ilu_fp:
-    train:
-      - HG004_Illumina_40_xy
-      - HG004_IlluminaPCR_40_xy
+  # xy_ilu_fp:
+  #   train:
+  #     - HG004_Illumina_40_xy
+  #     - HG004_IlluminaPCR_40_xy
 
-    vartypes: [SNV, INDEL]
-    error_labels: [fp]
-    filtered_are_candidates: true
-    interactions: 20
+  #   vartypes: [SNV, INDEL]
+  #   error_labels: [fp]
+  #   filtered_are_candidates: true
+  #   interactions: 20
 
-    features:
-      <<: *feature_base
+  #   features:
+  #     <<: *feature_base
 
   # seqtech only interaction models
 
