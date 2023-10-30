@@ -146,6 +146,11 @@ models:
         variables:
           coverage: 40
           seqtech: "Illumina-PCR-Free"
+      Clinvar_Ultima:
+        query_key: Clinvar_auto
+        variables:
+          coverage: 40
+          seqtech: "Ultima"
 
     vartypes: [SNV, INDEL]
     error_labels: [fn]
@@ -226,6 +231,28 @@ models:
       - HG002_Illumina_30_auto
       - HG002_Illumina_50_auto
 
+    test:
+      Clinvar_Illumina_50:
+        query_key: Clinvar_auto
+        variables:
+          coverage: 50
+          seqtech: "Illumina-PCR-Free"
+      Clinvar_Element_50:
+        query_key: Clinvar_auto
+        variables:
+          coverage: 50
+          seqtech: "Element"
+      Clinvar_Illumina_30:
+        query_key: Clinvar_auto
+        variables:
+          coverage: 30
+          seqtech: "Illumina-PCR-Free"
+      Clinvar_Element_30:
+        query_key: Clinvar_auto
+        variables:
+          coverage: 30
+          seqtech: "Element"
+
     vartypes: [SNV, INDEL]
     error_labels: [fn]
     filtered_are_candidates: false
@@ -240,6 +267,18 @@ models:
       - HG002_Element_30_auto
       - HG002_Illumina_30_auto
 
+    test:
+      Clinvar_Illumina:
+        query_key: Clinvar_auto
+        variables:
+          coverage: 30
+          seqtech: "Illumina-PCR-Free"
+      Clinvar_Element:
+        query_key: Clinvar_auto
+        variables:
+          coverage: 30
+          seqtech: "Element"
+
     vartypes: [SNV, INDEL]
     error_labels: [fn]
     filtered_are_candidates: false
@@ -253,6 +292,23 @@ models:
       - HG002_Illumina_30_auto
       - HG002_Illumina_40_auto
       - HG002_Illumina_50_auto
+
+    test:
+      Clinvar_Illumina_50:
+        query_key: Clinvar_auto
+        variables:
+          coverage: 50
+          seqtech: "Illumina-PCR-Free"
+      Clinvar_Illumina_40:
+        query_key: Clinvar_auto
+        variables:
+          coverage: 40
+          seqtech: "Illumina-PCR-Free"
+      Clinvar_Illumina_30:
+        query_key: Clinvar_auto
+        variables:
+          coverage: 30
+          seqtech: "Illumina-PCR-Free"
 
     vartypes: [SNV, INDEL]
     error_labels: [fn]
