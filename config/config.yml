@@ -313,7 +313,8 @@ models:
     vartypes: [SNV, INDEL]
     error_labels: [fn]
     filtered_are_candidates: false
-    interactions: 20
+    interactions:
+      - VAR_coverage
 
     features:
       <<: *feature_base_w_coverage
