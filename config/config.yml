@@ -28,6 +28,14 @@ labeled_queries:
       coverage: 50
       seqtech: Element
 
+  HG002_Element_long_50_auto: &ele_long_50_auto
+    <<: *ele_30_auto
+    src:
+      url: https://storage.googleapis.com/brain-genomics/awcarroll/share/giab/element/HG002.element.cloudbreak.1000bp_ins.grch38.vcf.gz
+    variables:
+      coverage: 50
+      seqtech: Element_long
+
   HG002_Illumina_30_auto: &ilu_30_auto
     <<: *ele_30_auto
     src:
@@ -287,6 +295,32 @@ models:
     features:
       <<: *feature_base
 
+  auto_ele_long_v_ilu_50_fn: &auto_ele_long_v_ilu_30
+    train:
+      - HG002_Element_long_50_auto
+      - HG002_Illumina_50_auto
+
+    test:
+      Clinvar_Illumina:
+        query_key: Clinvar_auto
+        variables:
+          coverage: 50
+          seqtech: "Illumina-PCR-Free"
+      Clinvar_Element:
+        query_key: Clinvar_auto
+        variables:
+          coverage: 50
+          seqtech: "Element_long"
+
+    vartypes: [SNV, INDEL]
+    error_labels: [fn]
+    filtered_are_candidates: false
+    interactions:
+      - VAR_seqtech
+
+    features:
+      <<: *feature_base
+
   auto_ilu_full_fn:
     train:
       - HG002_Illumina_30_auto
@@ -477,5 +511,6 @@ feature_definitions:
           - "Illumina-PCR-Free"
           - "Illumina-PCR-Plus"
           - "Element"
+          - "Element_long"
           - "Ultima"
         description: Sequencing tech used to produce the reads for the VCF file
