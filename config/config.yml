@@ -19,6 +19,7 @@ labeled_queries:
     variables:
       seqtech: Element_500
       mapper: bwa
+    tp_from_baseline: true
 
   HG002_Element_short_vg: &ele_short_vg
     <<: *ele_short_bwa
