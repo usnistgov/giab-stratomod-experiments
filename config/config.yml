@@ -7,7 +7,7 @@ reference_sets:
   #   chr_filter: [23, 24]
 
 labeled_queries:
-  HG002_Element_short: &ele_short
+  HG002_Element_short_bwa: &ele_short_bwa
     chr_prefix: chr
     corrections:
       fix_refcall_gt: true
@@ -15,23 +15,34 @@ labeled_queries:
     benchmark: HG002_asm_q100_auto
     refset: GRCh38_auto
     src:
-      url: https://storage.googleapis.com/brain-genomics/awcarroll/share/giab/element/HG002.element.cloudbreak.500bp_ins.grch38.vcf.gz
+      url: https://storage.googleapis.com/brain-genomics/awcarroll/share/giab/element/vcf/HG002.element.cloudbreak.500bp_ins.30x.grch38.vcf.gz
     variables:
-      seqtech: Element_bwa_short
+      seqtech: Element_500
+      mapper: bwa
 
-  HG002_Element_long: &ele_long
-    <<: *ele_short
+  HG002_Element_short_vg: &ele_short_vg
+    <<: *ele_short_bwa
     src:
-      url: https://storage.googleapis.com/brain-genomics/awcarroll/share/giab/element/HG002.element.cloudbreak.1000bp_ins.grch38.vcf.gz
+      url: https://storage.googleapis.com/brain-genomics/awcarroll/share/giab/element/vcf/HG002.element.cloudbreak.500bp_ins.30x.vg.grch38.vcf.gz 
     variables:
-      seqtech: Element_bwa_long
+      seqtech: Element_500
+      mapper: vg
+
+  HG002_Element_long_bwa: &ele_long_bwa
+    <<: *ele_short_bwa
+    src:
+      url: https://storage.googleapis.com/brain-genomics/awcarroll/share/giab/element/vcf/HG002.element.cloudbreak.1000bp_ins.30x.grch38.vcf.gz
+    variables:
+      seqtech: Element_1000
+      mapper: bwa
 
   HG002_Element_long_vg: &ele_long_vg
-    <<: *ele_short
+    <<: *ele_short_bwa
     src:
-      url: https://storage.googleapis.com/brain-genomics/awcarroll/share/giab/element/HG002.element.cloudbreak_1000bp.50x.vg.grch38.vcf.gz
+      url: https://storage.googleapis.com/brain-genomics/awcarroll/share/giab/element/vcf/HG002.element.cloudbreak.1000bp_ins.30x.vg.grch38.vcf.gz
     variables:
-      seqtech: Element_vg_long
+      seqtech: Element_1000
+      mapper: vg
 
 unlabeled_queries:
   Clinvar_auto:
@@ -50,20 +61,22 @@ unlabeled_queries:
       GQ: null
 
 models:
-  short_v_long_fn: &model_short_v_long
+  short_v_long_fn: &model_short_v_long_bwa
     train:
-      - HG002_Element_short
-      - HG002_Element_long
+      - HG002_Element_short_bwa
+      - HG002_Element_long_bwa
 
     test:
       Clinvar_Element_short:
         query_key: Clinvar_auto
         variables:
-          seqtech: "Element_bwa_short"
+          seqtech: Element_500
+          mapper: bwa
       Clinvar_Element_long:
         query_key: Clinvar_auto
         variables:
-          seqtech: "Element_bwa_long"
+          seqtech: Element_1000
+          mapper: bwa
 
     vartypes: [SNV, INDEL]
     error_labels: [fn]
@@ -75,6 +88,11 @@ models:
     features: &feature_base
 
       VAR_seqtech:
+        feature_type: categorical
+        visualization:
+          plot_type: bar
+
+      VAR_mapper:
         feature_type: categorical
         visualization:
           plot_type: bar
@@ -138,42 +156,78 @@ models:
           plot_type: bar
           truncate: {upper: 50}
 
-  bwa_v_vg_fn:
-    <<: *model_short_v_long
+  short_v_long_vg_fn:
+    <<: *model_short_v_long_bwa
     train:
-      - HG002_Element_long
+      - HG002_Element_short_vg
+      - HG002_Element_long_vg
+
+    test:
+      Clinvar_Element_short:
+        query_key: Clinvar_auto
+        variables:
+          mapper: vg
+          seqtech: Element_500
+      Clinvar_Element_long:
+        query_key: Clinvar_auto
+        variables:
+          mapper: vg
+          seqtech: Element_1000
+
+  bwa_v_vg_fn:
+    <<: *model_short_v_long_bwa
+    train:
+      - HG002_Element_long_bwa
       - HG002_Element_long_vg
 
     test:
       Clinvar_Element_bwa:
         query_key: Clinvar_auto
         variables:
-          seqtech: "Element_bwa_long"
+          mapper: bwa
+          seqtech: Element_1000
       Clinvar_Element_vg:
         query_key: Clinvar_auto
         variables:
-          seqtech: "Element_vg_long"
+          mapper: vg
+          seqtech: Element_1000
 
-  element_3way_fn:
-    <<: *model_short_v_long
+    interactions:
+      - VAR_mapper
+
+  element_4way_fn:
+    <<: *model_short_v_long_bwa
     train:
-      - HG002_Element_short
-      - HG002_Element_long
+      - HG002_Element_short_bwa
+      - HG002_Element_short_vg
+      - HG002_Element_long_bwa
       - HG002_Element_long_vg
 
     test:
       Clinvar_Element_bwa_short:
         query_key: Clinvar_auto
         variables:
-          seqtech: "Element_bwa_short"
+          seqtech: "Element_500"
+          mapper: bwa
       Clinvar_Element_bwa_long:
         query_key: Clinvar_auto
         variables:
-          seqtech: "Element_bwa_long"
+          seqtech: "Element_1000"
+          mapper: bwa
+      Clinvar_Element_vg_short:
+        query_key: Clinvar_auto
+        variables:
+          seqtech: "Element_500"
+          mapper: vg
       Clinvar_Element_vg_long:
         query_key: Clinvar_auto
         variables:
-          seqtech: "Element_vg_long"
+          seqtech: "Element_1000"
+          mapper: vg
+
+    interactions:
+      - VAR_mapper
+      - VAR_seqtech
 
 references:
   GRCh38:
@@ -238,9 +292,13 @@ feature_definitions:
   variables:
     continuous: {}
     categorical:
+      mapper:
+        levels:
+          - bwa
+          - vg
+        description: Mapper used to align reads
       seqtech:
         levels:
-          - "Element_bwa_short"
-          - "Element_bwa_long"
-          - "Element_vg_long"
-        description: Sequencing tech/mapper used to produce the reads for the VCF file
+          - "Element_500"
+          - "Element_1000"
+        description: Sequencing tech used to produce the reads for the VCF file
