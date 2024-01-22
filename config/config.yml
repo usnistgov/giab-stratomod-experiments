@@ -2,9 +2,6 @@ reference_sets:
   GRCh38_auto:
     ref: GRCh38
     chr_filter: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
-  GRCh38_xy:
-    ref: GRCh38
-    chr_filter: [23, 24]
 
 labeled_queries:
   HG002_Illumina_30_auto: &ilu_30_auto
@@ -26,12 +23,12 @@ labeled_queries:
     variables:
       coverage: 40
 
-  HG002_Illumina_50_auto: &ilu_50_auto
-    <<: *ilu_30_auto
-    src:
-      url: https://storage.googleapis.com/brain-genomics/awcarroll/share/giab/element/HG002.novaseq.pcr-free.50x.dedup.grch38.vcf.gz
-    variables:
-      coverage: 50
+#  HG002_Illumina_50_auto: &ilu_50_auto
+#    <<: *ilu_30_auto
+#    src:
+#      url: https://storage.googleapis.com/brain-genomics/awcarroll/share/giab/element/HG002.novaseq.pcr-free.50x.dedup.grch38.vcf.gz
+#    variables:
+#      coverage: 50
 
 unlabeled_queries:
   Clinvar_auto:
@@ -54,7 +51,7 @@ models:
     train:
       - HG002_Illumina_30_auto
       - HG002_Illumina_40_auto
-      - HG002_Illumina_50_auto
+      #- HG002_Illumina_50_auto
 
     test:
       Clinvar_Illumina_50:
