@@ -1,0 +1,239 @@
+reference_sets:
+  GRCh38_auto:
+    ref: GRCh38
+    chr_filter: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]
+
+labeled_queries:
+  HG002_Illumina_q100: &ill_40_q100
+    chr_prefix: chr
+    corrections:
+      fix_refcall_gt: true
+    split_biallelics: true
+    benchmark: HG002_q100
+    refset: GRCh38_auto
+    src:
+      url: https://storage.googleapis.com/brain-genomics-public/research/sequencing/grch38/vcf/hiseqx/wgs_pcr_free/40x/HG002.hiseqx.pcr-free.40x.deepvariant-v1.0.grch38.vcf.gz
+    variables:
+      seqtech: Illumina
+
+  HG002_Hifi_q100:
+    <<: *ill_40_q100
+    src:
+      url: https://ftp-trace.ncbi.nlm.nih.gov/giab/ftp/data/AshkenazimTrio/analysis/PacBio_CCS_15kb_20kb_chemistry2_10312019/GRCh38/deepvariant_HG002_GRCh38_15kb_37X_SequelII.vcf.gz
+    variables:
+      seqtech: Hifi
+  
+  HG002_Illumina_v4:
+    <<: *ill_40_q100
+    benchmark: HG002_v4
+    src:
+      url: https://storage.googleapis.com/brain-genomics-public/research/sequencing/grch38/vcf/hiseqx/wgs_pcr_free/40x/HG002.hiseqx.pcr-free.40x.deepvariant-v1.0.grch38.vcf.gz
+
+  HG005_Illumina_v4:
+    <<: *ill_40_q100
+    benchmark: HG005_v4
+    src:
+      url: https://storage.googleapis.com/brain-genomics-public/research/sequencing/grch38/vcf/hiseqx/wgs_pcr_free/40x/HG005.hiseqx.pcr-free.40x.deepvariant-v1.0.grch38.vcf.gz
+
+  HG007_Illumina_v4:
+    <<: *ill_40_q100
+    benchmark: HG007_v4
+    src:
+      url: https://storage.googleapis.com/brain-genomics-public/research/sequencing/grch38/vcf/hiseqx/wgs_pcr_free/40x/HG007.hiseqx.pcr-free.40x.deepvariant-v1.0.grch38.vcf.gz
+
+unlabeled_queries:
+  Clinvar_auto:
+    refset: GRCh38_auto
+    src:
+      url: https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/archive_2.0/2022/clinvar_20220812.vcf.gz
+    chr_prefix: ''
+    # NOTE: Clinvar has a wonky header which will make bcftools choke. This
+    # shouldn't be necessary anyway
+    split_biallelics: false
+    # don't include any of these fields since they are not defined in clinvar
+    format_fields:
+      VAF: null
+      DP: null
+      GT: null
+      GQ: null
+
+models:
+  hifi_v_ilu_fn:
+    train:
+      - HG002_Illumina_q100
+      - HG002_Hifi_q100
+
+    test:
+      HG002:
+        query_key: HG002_Illumina_v4
+        variables:
+          seqtech: Illumina
+      HG005:
+        query_key: HG005_Illumina_v4
+        variables:
+          seqtech: Illumina
+      HG007:
+        query_key: HG007_Illumina_v4
+        variables:
+          seqtech: Illumina
+      Clinvar:
+        query_key: Clinvar_auto
+        variables:
+          seqtech: "Illumina"
+
+    vartypes: [SNV, INDEL]
+    error_labels: [fn]
+    filtered_are_candidates: false
+
+    interactions: [VAR_seqtech]
+
+    features: &feature_base
+
+      VAR_seqtech:
+        feature_type: categorical
+        visualization:
+          plot_type: bar
+
+      VCF_indel_length:
+        visualization:
+          plot_type: bar
+          truncate: {lower: -50, upper: 50}
+
+      HOMOPOL_A_length: &homopol_length
+        visualization:
+          plot_type: bar
+          truncate: {lower: 0, upper: 50}
+      HOMOPOL_T_length: *homopol_length
+      HOMOPOL_G_length: *homopol_length
+      HOMOPOL_C_length: *homopol_length
+      HOMOPOL_A_imperfect_frac: &homopol_frac
+        fill_na: -1
+        visualization:
+          split_missing: 0
+      HOMOPOL_T_imperfect_frac: *homopol_frac
+      HOMOPOL_G_imperfect_frac: *homopol_frac
+      HOMOPOL_C_imperfect_frac: *homopol_frac
+
+      TR_unit_size_max:
+        visualization:
+          plot_type: bar
+          truncate: {lower: 0, upper: 50}
+      TR_identity_min: {}
+      TR_length:
+        transform: log
+        visualization:
+          split_missing: 0
+      TR_percent_AT_median:
+        fill_na: -1
+        visualization:
+          split_missing: 0
+
+      REPMASK_SINE_length:
+        transform: binary
+        alt_name: REPMASK_SINE
+        feature_type: categorical
+      REPMASK_LTR_length:
+        transform: binary
+        alt_name: REPMASK_LTR
+        feature_type: categorical
+      REPMASK_LINE_length: {}
+
+      MAP_difficult_250bp:
+        feature_type: categorical
+      MAP_difficult_100bp:
+        feature_type: categorical
+
+      SEGDUP_size_max: {}
+      SEGDUP_identity_mean: {}
+      SEGDUP_count:
+        visualization:
+          plot_type: bar
+          truncate: {upper: 50}
+
+references:
+  GRCh38:
+    sdf:
+      src:
+        url: https://s3.amazonaws.com/rtg-datasets/references/GRCh38.sdf.zip
+      chr_prefix: chr
+      is_fasta: False
+    strats:
+      mhc: [{chrom: 6, start: 28510020, end: 33480577}]
+    feature_data:
+      mappability:
+        low:
+          src:
+            url: https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/genome-stratifications/v3.0/GRCh38/mappability/GRCh38_lowmappabilityall.bed.gz
+        high:
+          src:
+            url: https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/genome-stratifications/v3.0/GRCh38/mappability/GRCh38_nonunique_l250_m0_e0.bed.gz
+      segdups:
+        src:
+          url: https://hgdownload.cse.ucsc.edu/goldenPath/hg38/database/genomicSuperDups.txt.gz
+        params:
+          bed_cols: {chrom: 1, start: 2, end: 3}
+      tandem_repeats:
+        src:
+          url: https://hgdownload.cse.ucsc.edu/goldenPath/hg38/database/simpleRepeat.txt.gz
+        params:
+          bed_cols: {chrom: 1, start: 2, end: 3}
+      repeat_masker:
+        src:
+          url: https://hgdownload.cse.ucsc.edu/goldenPath/hg38/database/rmsk.txt.gz
+        params:
+          bed_cols: {chrom: 5, start: 6, end: 7}
+        class_families:
+          SINE: []
+          LINE: [L1, L2, CR1, RTE-BovB, Dong-R4]
+          LTR: []
+          Satellite: []
+    benchmarks:
+      HG002_v4:
+        vcf:
+          src:
+            url: https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/AshkenazimTrio/HG002_NA24385_son/NISTv4.2.1/GRCh38/HG002_GRCh38_1_22_v4.2.1_benchmark.vcf.gz
+            md5: dc750b3807d4af1f7ffec852e9c2f771
+        bed:
+          src:
+            url: https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/AshkenazimTrio/HG002_NA24385_son/NISTv4.2.1/GRCh38/HG002_GRCh38_1_22_v4.2.1_benchmark_noinconsistent.bed
+            md5: 97265e922a97c69a0391cf3f92a89b8b
+
+      HG005_v4:
+        vcf:
+          src:
+            url: https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/ChineseTrio/HG005_NA24631_son/NISTv4.2.1/GRCh38/HG005_GRCh38_1_22_v4.2.1_benchmark.vcf.gz
+            md5: 35fe853b7e8d979daa91033ed6863e98
+        bed:
+          src:
+            url: https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/ChineseTrio/HG005_NA24631_son/NISTv4.2.1/GRCh38/HG005_GRCh38_1_22_v4.2.1_benchmark.bed
+            md5: f06ec2339592168a75ad4236b87cb2a3
+
+      HG007_v4:
+        vcf:
+          src:
+            url: https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/ChineseTrio/HG007_NA24695_mother/NISTv4.2.1/GRCh38/HG007_GRCh38_1_22_v4.2.1_benchmark.vcf.gz
+            md5: 336f8cf6806521618779b6c5f4eadeb7
+        bed:
+          src:
+            url: https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/ChineseTrio/HG007_NA24695_mother/NISTv4.2.1/GRCh38/HG007_GRCh38_1_22_v4.2.1_benchmark.bed
+            md5: 6239fad8618396f9f6a269070fede44b
+
+      # from here: https://drive.google.com/drive/u/1/folders/1FNcfcup7_vEBBmrRFN9ZPMOV540joUZm
+      HG002_q100:
+        vcf:
+          src: 
+            filepath: data/benchmarks/GRCh38_HG2-T2TQ100-V0.9_dipcall-z2k.vcf.gz
+            md5: 054de8d804f2eb42ff17ff21d3694c16
+        bed:
+          src: 
+            filepath: data/benchmarks/GRCh38_HG2-T2TQ100-V0.9_dipcall-z2k.benchmark.bed.gz
+            md5: 972bd257859de5c58773567087c22411
+
+feature_definitions:
+  variables:
+    categorical:
+      seqtech:
+        levels:
+          - "Illumina"
+          - "Hifi"
+        description: Sequencing tech used to produce the reads for the VCF file
