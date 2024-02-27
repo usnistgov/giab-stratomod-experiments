@@ -166,7 +166,7 @@ references:
         bed:
           src:
             url: https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/AshkenazimTrio/HG002_NA24385_son/NISTv4.2.1/GRCh38/HG002_GRCh38_1_22_v4.2.1_benchmark_noinconsistent.bed
-            md5: 97265e922a97c69a0391cf3f92a89b8b
+            md5: 7a3acc9f7e2ab5daa9fd4d42919aa4c6
 
       HG007_v4:
         vcf:
@@ -176,7 +176,7 @@ references:
         bed:
           src:
             url: https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/ChineseTrio/HG007_NA24695_mother/NISTv4.2.1/GRCh38/HG007_GRCh38_1_22_v4.2.1_benchmark.bed
-            md5: 6239fad8618396f9f6a269070fede44b
+            md5: e09338dd438f89bb889ab9ed6b3a1b3a
 
       # from here: https://drive.google.com/drive/u/1/folders/1FNcfcup7_vEBBmrRFN9ZPMOV540joUZm
       HG002_q100:
