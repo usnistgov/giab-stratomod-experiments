@@ -21,8 +21,8 @@ set-resources:
   - annotate_unlabeled_variants:mem_mb=32000
   - summarize_labeled_annotated_variants:mem_mb=32000
   - summarize_unlabeled_annotated_variants:mem_mb=32000
-  - summarize_labeled_output:mem_mb=16000
-  - summarize_unlabeled_output:mem_mb=16000
+  - summarize_labeled_test:mem_mb=16000
+  - summarize_unlabeled_test:mem_mb=16000
   - prepare_train_data:mem_mb=96000
   - prepare_labeled_test_data:mem_mb=32000
   - prepare_unlabeled_test_data:mem_mb=32000

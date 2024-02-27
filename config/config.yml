@@ -196,17 +196,20 @@ references:
         bed:
           src:
             url: https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/AshkenazimTrio/HG002_NA24385_son/NISTv4.2.1/GRCh38/HG002_GRCh38_1_22_v4.2.1_benchmark_noinconsistent.bed
-            md5: 97265e922a97c69a0391cf3f92a89b8b
+              #md5: 97265e922a97c69a0391cf3f92a89b8b
 
       HG005_v4:
         vcf:
           src:
             url: https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/ChineseTrio/HG005_NA24631_son/NISTv4.2.1/GRCh38/HG005_GRCh38_1_22_v4.2.1_benchmark.vcf.gz
             md5: 35fe853b7e8d979daa91033ed6863e98
+          corrections:
+            # vcfeval chokes on this field, so take it out
+            strip_format_fields: ["IPS"]
         bed:
           src:
             url: https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/ChineseTrio/HG005_NA24631_son/NISTv4.2.1/GRCh38/HG005_GRCh38_1_22_v4.2.1_benchmark.bed
-            md5: f06ec2339592168a75ad4236b87cb2a3
+              #md5: f06ec2339592168a75ad4236b87cb2a3
 
       HG007_v4:
         vcf:
@@ -216,7 +219,7 @@ references:
         bed:
           src:
             url: https://ftp-trace.ncbi.nlm.nih.gov/ReferenceSamples/giab/release/ChineseTrio/HG007_NA24695_mother/NISTv4.2.1/GRCh38/HG007_GRCh38_1_22_v4.2.1_benchmark.bed
-            md5: 6239fad8618396f9f6a269070fede44b
+              #md5: 6239fad8618396f9f6a269070fede44b
 
       # from here: https://drive.google.com/drive/u/1/folders/1FNcfcup7_vEBBmrRFN9ZPMOV540joUZm
       HG002_q100:
