@@ -24,13 +24,13 @@ labeled_queries:
     src:
       url: https://giab-data.s3.amazonaws.com/ultima-GIAB-Feb-2024/DeepVariant_vcfs/NA24385-Z0027.annotated.AF.vcf.gz
     variables:
-      seqtech: Ultima-old
+      seqtech: Ultima-new
 
   HG002_Ultima_v4:
     <<: *ult_old
     benchmark: HG002_v4
     src:
-      url: https://giab-data.s3.amazonaws.com/ultima-GIAB-Feb-2024/DeepVariant_vcfs/NA24385-Z0027.annotated.AF.vcf.gz
+      url: https://s3.amazonaws.com/ultima-selected-1k-genomes-vcf-only/DeepVariant_vcfs/HG002_005401-UGAv3-1-CACATCCTGCATGTGAT.vcf.gz
   
   HG007_Ultima_v4:
     <<: *ult_old
