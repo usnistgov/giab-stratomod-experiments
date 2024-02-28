@@ -13,6 +13,9 @@ labeled_queries:
     refset: GRCh38_auto
     src:
       url: https://s3.amazonaws.com/ultima-selected-1k-genomes-vcf-only/DeepVariant_vcfs/HG002_005401-UGAv3-1-CACATCCTGCATGTGAT.vcf.gz
+    corrections:
+      # bcftools complains about wrong number of fields for SB (strand bias) on some lines
+      strip_format_fields: ["SB"]
     variables:
       seqtech: Ultima-old
 

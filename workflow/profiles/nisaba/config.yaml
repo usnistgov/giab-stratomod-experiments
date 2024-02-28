@@ -23,12 +23,16 @@ set-resources:
   - summarize_unlabeled_annotated_variants:mem_mb=32000
   - summarize_labeled_output:mem_mb=16000
   - summarize_unlabeled_output:mem_mb=16000
+  - summarize_labeled_test:mem_mb=16000
+  - summarize_unlabeled_test:mem_mb=16000
   - prepare_train_data:mem_mb=96000
   - prepare_labeled_test_data:mem_mb=32000
   - prepare_unlabeled_test_data:mem_mb=32000
   - summarize_model:mem_mb=32000
   - train_model:mem_mb=32000
   - decompose_model:mem_mb=32000
+  - test_labeled_ebm:mem_mb=16000
+  - test_unlabeled_ebm:mem_mb=16000
 set-threads:
   - train_ebm=4
 restart-times: 0
