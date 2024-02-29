@@ -29,6 +29,8 @@ set-resources:
   - summarize_model:mem_mb=32000
   - train_model:mem_mb=32000
   - decompose_model:mem_mb=32000
+  - test_labeled_ebm:mem_mb=16000
+  - test_unlabeled_ebm:mem_mb=16000
 set-threads:
   - train_ebm=4
 restart-times: 0

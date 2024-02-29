@@ -76,10 +76,14 @@ models:
         query_key: HG007_Illumina_v4
         variables:
           seqtech: Illumina
-      Clinvar:
+      Clinvar_Illumina:
         query_key: Clinvar_auto
         variables:
           seqtech: "Illumina"
+      Clinvar_Hifi:
+        query_key: Clinvar_auto
+        variables:
+          seqtech: "Hifi"
 
     vartypes: [SNV, INDEL]
     error_labels: [fn]
