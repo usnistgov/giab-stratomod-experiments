@@ -175,14 +175,14 @@ file was committed on the results in question, data can be accessed for any
 given commit/tag. To list the files for a given tag:
 
 ```
-dvc list --rev <tag> https://gitlab.nist.gov/gitlab/njd2/giab-ai-ebm.git --dvc-only -R
+dvc list --rev <tag> https://github.com/usnist/giab-stratomod.git --dvc-only -R
 ```
 
 To pull the data from the `results/ebm` folder (eg the model output) from a
 given tag/commit to a local file path:
 
 ```
-dvc get --rev <tag> https://gitlab.nist.gov/gitlab/njd2/giab-ai-ebm.git results/ebm -o <local_path>
+dvc get --rev <tag> https://github.com/usnist/giab-stratomod.git results/ebm -o <local_path>
 ```
 
 To track in a local `dvc` repo (eg for rigorous analysis) use `import` instead
